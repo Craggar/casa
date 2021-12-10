@@ -48,6 +48,7 @@ class CasaCasePolicy < ApplicationPolicy
   alias_method :update_judge?, :admin_or_supervisor_or_volunteer?
   alias_method :update_court_report_due_date?, :admin_or_supervisor_or_volunteer?
   alias_method :update_court_orders?, :admin_or_supervisor_or_volunteer?
+  alias_method :datatable?, :index?
 
   def permitted_attributes
     common_attrs = [

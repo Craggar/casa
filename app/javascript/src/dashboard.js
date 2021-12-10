@@ -99,41 +99,20 @@ $('document').ready(() => {
     order: [[6, 'desc']],
     columns: [
       {
-        name: 'display_name',
+        name: 'casa_case',
         render: (data, type, row, meta) => {
           return `
-            <span class="mobile-label">Name</span>
-            <a href="${editVolunteerPath(row.id)}">
-              ${row.display_name || row.email}
-            </a>
-          `
-        }
-      },
-      {
-        name: 'email',
-        render: (data, type, row, meta) => row.email,
-        visible: false
-      },
-      {
-        className: 'supervisor-column',
-        name: 'supervisor_name',
-        render: (data, type, row, meta) => {
-          return row.supervisor.id
-            ? `
-            <span class="mobile-label">Supervisor</span>
-              <a href="${editSupervisorPath(row.supervisor.id)}">
-                ${row.supervisor.name}
-              </a>
+            <a href="${casaCasePath(row.id)}">${row.case_number}</a>
             `
-            : ''
-        }
+        },
+        orderable: false
       },
       {
         name: 'active',
         render: (data, type, row, meta) => {
           return `
             <span class="mobile-label">Status</span>
-            ${row.active === 'true' ? 'Active' : 'Inactive'}
+            ${row.status}
           `
         },
         searchable: false
@@ -148,20 +127,49 @@ $('document').ready(() => {
         searchable: false
       },
       {
-        name: 'casa_cases',
+        name: 'name',
         render: (data, type, row, meta) => {
-          const links = row.casa_cases.map(casaCase => {
-            return `
-            <a href="${casaCasePath(casaCase.id)}">${casaCase.case_number}</a>
-            `
+          if (row.status === 'Inactive') {
+            return `Case was deactivated on: ${row.updated_at}`
+          }
+          const names = row.assigned_to.map(volunteer => {
+            if (row.viewing_as === 'admin') {
+              return `
+              <a href="${editVolunteerPath(volunteer.id)}">${volunteer.display_name}</a>
+              `
+            } else {
+              return volunteer.display_name
+            }
           })
-          const caseNumbers = `
-            <span class="mobile-label">Case Number(s)</span>
-            ${links.join(', ')}
+          return `
+            <span class="mobile-label">Assigned To</span>
+            ${names.join(', ')}
           `
-          return caseNumbers
+        }
+      },
+      {
+        className: 'supervisor-column',
+        name: 'supervisor_name',
+        render: (data, type, row, meta) => {
+          console.log(row)
+          if (row.status === 'Inactive') {
+            return `Case was deactivated on: ${row.updated_at}`
+          }
+          const supervisors = row.supervisors.map(supervisor => {
+            if (row.viewing_as === 'admin') {
+              return `
+              <a href="${editSupervisorPath(supervisor.id)}">${supervisor.display_name}</a>
+              `
+            } else {
+              return supervisor.display_name
+            }
+          })
+          return `
+            <span class="mobile-label">Supervisor</span>
+            ${supervisors.join(', ')}
+          `
         },
-        orderable: false
+        visible: false
       },
       {
         name: 'most_recent_attempt_occurred_at',
@@ -188,22 +196,6 @@ $('document').ready(() => {
         },
         searchable: false,
         visible: false
-      },
-      {
-        name: 'actions',
-        orderable: false,
-        render: (data, type, row, meta) => {
-          return `
-          <span class="mobile-label">Actions</span>
-            <a href="${editVolunteerPath(row.id)}" class="btn btn-primary">
-              Edit
-            </a>
-            <a href="${impersonateVolunteerPath(row.id)}" class="btn btn-secondary">
-              Impersonate
-            </a>
-          `
-        },
-        searchable: false
       }
     ],
     processing: true,

@@ -7,10 +7,15 @@ class VolunteersController < ApplicationController
   end
 
   def datatable
-    authorize Volunteer
-    volunteers = policy_scope current_organization.volunteers
-    datatable = VolunteerDatatable.new volunteers, params
-
+    authorize CasaCase
+    org_cases = current_user.casa_org.casa_cases.includes(:case_contacts, assigned_volunteers: :supervisor_volunteer)
+    casa_cases = policy_scope(org_cases)
+    # TODO: Review the @casa_cases_filter_id impact
+    # @casa_cases_filter_id = policy(CasaCase).can_see_filters? ? "casa-cases" : ""
+    datatable = CasaCaseDatatable.new(
+      casa_cases,
+      params.merge(current_user_is_volunteer: current_user.volunteer?)
+    )
     render json: datatable
   end
 

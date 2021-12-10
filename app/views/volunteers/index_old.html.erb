@@ -70,13 +70,13 @@
           <%= check_box_tag "transition_youth_option_yes", "true", true,
                     class: "form-check-input",
                     data: { value: "true" } %>
-          <%= label_tag "transition_youth_option_yes", t(".options_yes"), class: "form-check-label" %>
+          <%= label_tag "transition_youth_option_yes", t(".yes"), class: "form-check-label" %>
         </div>
         <div class="dropdown-item form-check">
           <%= check_box_tag "transition_youth_option_no", "false", true,
                     class: "form-check-input",
                     data: { value: "false" } %>
-          <%= label_tag "transition_youth_option_no", t(".option_no"), class: "form-check-label" %>
+          <%= label_tag "transition_youth_option_no", t(".no"), class: "form-check-label" %>
         </div>
       </div>
     </div>
@@ -127,14 +127,14 @@
       id="volunteers"
       data-source="<%= datatable_volunteers_path format: :json %>">
       <thead>
-        <tr>
-          <th><%= t(".heading.case_number") %></th>
-          <th><%= t(".heading.status") %></th>
-          <th><%= t(".heading.assigned_transition_aged_youth") %></th>
-          <th><%= t(".heading.assigned_to") %></th>
-          <th><%= t(".heading.supervisor") %></th>
-          <th><%= t(".heading.last_attempted_contact") %></th>
-        </tr>
+      <tr>
+        <th><%= t(".heading.case_number") %></th>
+        <th><%= t(".heading.status") %></th>
+        <th><%= t(".heading.assigned_transition_aged_youth") %></th>
+        <th><%= t(".heading.assigned_to") %></th>
+        <th><%= t(".heading.supervisor") %></th>
+        <th><%= t(".heading.last_attempted_contact") %></th>
+      </tr>
       </thead>
 
       <tbody>

@@ -456,11 +456,13 @@ en:
     index:
       active: Active
       button:
-        new: New Volunteer
+        new_volunteer: New Volunteer
+        new_case: New Case
       filter: Filter by
       heading:
         actions: Actions
         assigned_transition_aged_youth: Assigned To Transition Aged Youth
+        assigned_to: Assigned To
         case_number: Case Number(s)
         contacts: Contacts Made in Past 60 Days
         e_mail: Email
@@ -471,6 +473,8 @@ en:
       inactive: Inactive
       no_supervisor: No supervisor assignment
       "no": No
+      option_no: No
+      options_yes: Yes
       pick_displayed_columns: Pick displayed columns
       select_columns: Select columns
       supervisor: Supervisor

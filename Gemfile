@@ -40,6 +40,7 @@ group :development, :test do
   gem "cypress-on-rails", "~> 1.11"
   gem "erb_lint", require: false
   gem "factory_bot_rails"
+  gem 'parallel_tests'
   gem "pry"
   gem "pry-byebug"
   gem "rspec-rails", "~> 5.0.2"
