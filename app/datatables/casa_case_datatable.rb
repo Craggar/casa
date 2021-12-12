@@ -47,6 +47,7 @@ class CasaCaseDatatable < ApplicationDatatable
       .where(active_filter)
       .where(transition_aged_youth_filter)
       .where(supervisor_filter)
+      .where(assigned_to_volunteer_filter)
       # .where(search_filter)
     # binding.pry
     query
@@ -101,6 +102,17 @@ class CasaCaseDatatable < ApplicationDatatable
 
         bool_filter filter do
           ["casa_cases.transition_aged_youth = ?", filter[0]]
+        end
+      }.call
+  end
+
+  def assigned_to_volunteer_filter
+    @assigned_to_volunteer_filter ||=
+      lambda {
+        filter = additional_filters[:assigned_to_volunteer]
+
+        bool_filter filter do
+          "case_assignments.id IS #{filter[0].downcase == "true" ? "NOT" : nil} NULL"
         end
       }.call
   end

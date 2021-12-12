@@ -213,11 +213,15 @@ $('document').ready(() => {
         const transitionYouthOptions = $('.transition-youth-options input:checked')
         const transitionYouthFilter = Array.from(transitionYouthOptions).map(option => JSON.parse(option.dataset.value))
 
+        const assignedToVolunteerOptions = $('.assigned-to-volunteer-options input:checked')
+        const assignedToVolunteerFilter = Array.from(assignedToVolunteerOptions).map(option => JSON.parse(option.dataset.value))
+
         return $.extend({}, d, {
           additional_filters: {
             supervisor: supervisorFilter,
             active: statusFilter,
-            transition_aged_youth: transitionYouthFilter
+            transition_aged_youth: transitionYouthFilter,
+            assigned_to_volunteer: assignedToVolunteerFilter
           }
         })
       },

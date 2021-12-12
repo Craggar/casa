@@ -47,7 +47,7 @@
     </div>
     <div class="dropdown pull-left mr-2">
       <button class="btn btn-secondary dropdown-toggle show" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <%= t(".transition_aged_youth") %>
+        <%= t(".transition_aged_youth") %>
       </button>
       <div class="dropdown-menu transition-youth-options" aria-labelledby="dropdownMenuButton">
         <div class="dropdown-item form-check">
@@ -72,13 +72,13 @@
         <div class="dropdown-item form-check">
           <%= check_box_tag "assigned_to_volunteer_option_yes", "Yes", true,
                       class: "form-check-input",
-                      data: { value: "Yes" } %>
+                      data: { value: "true" } %>
           <%= label_tag "assigned_to_volunteer_option_yes", t("common.yes_text"), class: "form-check-label" %>
         </div>
         <div class="dropdown-item form-check">
           <%= check_box_tag "assigned_to_volunteer_option_no", "No", true,
                       class: "form-check-input",
-                      data: { value: "No" } %>
+                      data: { value: "false" } %>
           <%= label_tag "assigned_to_volunteer_option_no", t("common.no_text"), class: "form-check-label" %>
         </div>
       </div>
