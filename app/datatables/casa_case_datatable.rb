@@ -44,13 +44,14 @@ class CasaCaseDatatable < ApplicationDatatable
 
   def filtered_records
     query = raw_records
+      .group("casa_cases.id")
       .where(active_filter)
-      .where(transition_aged_youth_filter)
-      .where(supervisor_filter)
       .where(assigned_to_volunteer_filter)
+      .where(supervisor_filter)
+      .where(transition_aged_youth_filter)
       .where(case_number_prefix_filter)
       # .where(search_filter)
-    # binding.pry
+      .having(assigned_to_many_volunteers_filter)
     query
   end
 
@@ -114,6 +115,17 @@ class CasaCaseDatatable < ApplicationDatatable
 
         bool_filter filter do
           "case_assignments.id IS #{filter[0].downcase == "true" ? "NOT" : nil} NULL"
+        end
+      }.call
+  end
+
+  def assigned_to_many_volunteers_filter
+    @assigned_to_many_volunteers_filter ||=
+      lambda {
+        filter = additional_filters[:assigned_to_many_volunteers]
+
+        bool_filter filter do
+          "COUNT(case_assignments.id) #{filter[0].downcase == "true" ? ">" : "<="} 1"
         end
       }.call
   end
