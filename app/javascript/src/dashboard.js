@@ -216,12 +216,16 @@ $('document').ready(() => {
         const assignedToVolunteerOptions = $('.assigned-to-volunteer-options input:checked')
         const assignedToVolunteerFilter = Array.from(assignedToVolunteerOptions).map(option => JSON.parse(option.dataset.value))
 
+        const caseNumberPrefixOptions = $('.case-number-prefix-options input:checked')
+        const caseNumberPrefixFilter = Array.from(caseNumberPrefixOptions).map(option => option.dataset.value)
+
         return $.extend({}, d, {
           additional_filters: {
             supervisor: supervisorFilter,
             active: statusFilter,
             transition_aged_youth: transitionYouthFilter,
-            assigned_to_volunteer: assignedToVolunteerFilter
+            assigned_to_volunteer: assignedToVolunteerFilter,
+            case_number_prefix: caseNumberPrefixFilter
           }
         })
       },

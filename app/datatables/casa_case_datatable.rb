@@ -48,6 +48,7 @@ class CasaCaseDatatable < ApplicationDatatable
       .where(transition_aged_youth_filter)
       .where(supervisor_filter)
       .where(assigned_to_volunteer_filter)
+      .where(case_number_prefix_filter)
       # .where(search_filter)
     # binding.pry
     query
@@ -115,6 +116,31 @@ class CasaCaseDatatable < ApplicationDatatable
           "case_assignments.id IS #{filter[0].downcase == "true" ? "NOT" : nil} NULL"
         end
       }.call
+  end
+
+  def case_number_prefix_filter
+    @case_number_prefix_filter ||=
+      lambda {
+        filter = additional_filters[:case_number_prefix]
+        return "FALSE" if filter.blank?
+
+        filter.map do |case_prefix|
+          if case_prefix == "None"
+            no_prefix_filter
+          else
+            "case_number LIKE '#{case_prefix}%'"
+          end
+        end.join(" OR ")
+      }.call
+  end
+
+  def no_prefix_filter
+    [
+      I18n.t("casa_cases.shared.prefix_options.cina"),
+      I18n.t("casa_cases.shared.prefix_options.tpr")
+    ].map do |case_prefix|
+      "case_number NOT LIKE '#{case_prefix}%'"
+    end.join(" AND ")
   end
 
   def supervisor_filter
