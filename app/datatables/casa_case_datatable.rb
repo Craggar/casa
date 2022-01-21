@@ -50,7 +50,7 @@ class CasaCaseDatatable < ApplicationDatatable
       .where(supervisor_filter)
       .where(transition_aged_youth_filter)
       .where(case_number_prefix_filter)
-      # .where(search_filter)
+      .where(search_filter)
       .having(assigned_to_many_volunteers_filter)
     query
   end
@@ -164,5 +164,38 @@ class CasaCaseDatatable < ApplicationDatatable
       null_filter = "supervisor_volunteers.id IS NULL OR" if filter.any?(&:blank?)
       ["#{null_filter} COALESCE(supervisors.display_name, supervisors.email) IN (?)", filter.select(&:present?)]
     end
+  end
+
+  def search_filter
+    @search_filter ||=
+      lambda {
+        return "TRUE" if search_term.blank?
+
+        ilike_fields = %w[
+          volunteers.display_name
+          volunteers.email
+          supervisors.display_name
+          supervisors.email
+        ]
+        ilike_clauses = ilike_fields.map { |field| "#{field} ILIKE ?" }.join(" OR ")
+        casa_case_number_clause = "volunteers.id IN (#{casa_case_number_filter_subquery})"
+        full_clause = "#{ilike_clauses} OR #{casa_case_number_clause}"
+
+        [full_clause, ilike_fields.count.times.map { "%#{search_term}%" }].flatten
+      }.call
+  end
+
+  def casa_case_number_filter_subquery
+    @casa_case_number_filter_subquery ||=
+      lambda {
+        return "" if search_term.blank?
+
+        CaseAssignment
+          .select(:volunteer_id)
+          .joins(:casa_case)
+          .where("casa_cases.case_number ILIKE ?", "%#{search_term}%")
+          .group(:volunteer_id)
+          .to_sql
+      }.call
   end
 end
