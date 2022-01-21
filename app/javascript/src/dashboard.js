@@ -99,13 +99,12 @@ $('document').ready(() => {
     order: [[6, 'desc']],
     columns: [
       {
-        name: 'casa_case',
+        name: 'casa_case_id',
         render: (data, type, row, meta) => {
           return `
             <a href="${casaCasePath(row.id)}">${row.case_number}</a>
             `
-        },
-        orderable: false
+        }
       },
       {
         name: 'active',
@@ -127,7 +126,7 @@ $('document').ready(() => {
         searchable: false
       },
       {
-        name: 'name',
+        name: 'volunteer_name',
         render: (data, type, row, meta) => {
           if (row.status === 'Inactive') {
             return `Case was deactivated on: ${row.updated_at}`

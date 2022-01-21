@@ -1,10 +1,10 @@
 class CasaCaseDatatable < ApplicationDatatable
   ORDERABLE_FIELDS = %w[
-    case_number
+    casa_case_id
     status
     has_transition_aged_youth_cases
     assigned_to
-    name
+    volunteer_name
     supervisor_name
     most_recent_attempt_occurred_at
   ]
@@ -61,9 +61,10 @@ class CasaCaseDatatable < ApplicationDatatable
       .select(
         <<-SQL
           casa_cases.*,
+          casa_cases.id AS casa_case_id,
           casa_cases.transition_aged_youth AS has_transition_aged_youth_cases,
           supervisors.display_name AS supervisor_name,
-          volunteers.display_name AS name,
+          volunteers.display_name AS volunteer_name,
           MAX(case_contacts.occurred_at) AS most_recent_attempt_occurred_at
         SQL
       )
