@@ -1,10 +1,11 @@
 class CasaCaseDatatable < ApplicationDatatable
   ORDERABLE_FIELDS = %w[
-    case_numbers
+    case_number
     status
     has_transition_aged_youth_cases
     assigned_to
-    supervisors
+    name
+    supervisor_name
     most_recent_attempt_occurred_at
   ]
 
@@ -59,12 +60,21 @@ class CasaCaseDatatable < ApplicationDatatable
     base_relation
       .select(
         <<-SQL
-          casa_cases.*
+          casa_cases.*,
+          casa_cases.transition_aged_youth AS has_transition_aged_youth_cases,
+          supervisors.display_name AS supervisor_name,
+          volunteers.display_name AS name,
+          MAX(case_contacts.occurred_at) AS most_recent_attempt_occurred_at
         SQL
       )
       .joins(
         <<-SQL
           LEFT JOIN case_assignments ON case_assignments.casa_case_id = casa_cases.id AND case_assignments.active
+        SQL
+      )
+      .joins(
+        <<-SQL
+          LEFT JOIN case_contacts ON casa_cases.id = case_contacts.casa_case_id
         SQL
       )
       .joins(
@@ -82,8 +92,14 @@ class CasaCaseDatatable < ApplicationDatatable
           LEFT JOIN users AS supervisors ON supervisors.id = supervisor_volunteers.supervisor_id
         SQL
       )
+      .group("supervisors.display_name, volunteers.display_name")
+      .order(order_clause)
       .order(:id)
       .includes(:case_contacts, assigned_volunteers: :supervisor)
+  end
+
+  def order_clause
+    @order_clause ||= build_order_clause || Arel.sql("casa_cases.case_number ASC")
   end
 
   def active_filter
@@ -174,7 +190,7 @@ class CasaCaseDatatable < ApplicationDatatable
         ilike_fields = %w[
           volunteers.display_name
           volunteers.email
-          supervisors.display_name
+          supervisor.display_name
           supervisors.email
         ]
         ilike_clauses = ilike_fields.map { |field| "#{field} ILIKE ?" }.join(" OR ")
