@@ -37,7 +37,7 @@ gem "webpacker", "~> 5.4" # Transpile app-like JavaScript. Read more: https://gi
 group :development, :test do
   gem "bullet" # Detect and fix N+1 queries
   gem "byebug", platforms: %i[mri mingw x64_mingw] # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem "cypress-on-rails", "~> 1.11"
+  gem "cypress-on-rails", "~> 1.12"
   gem "erb_lint", require: false
   gem "factory_bot_rails"
   gem "pry"
