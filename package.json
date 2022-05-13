@@ -30,7 +30,7 @@
   },
   "version": "0.1.0",
   "devDependencies": {
-    "@webpack-cli/serve": "^1.6.0",
+    "@webpack-cli/serve": "^1.6.1",
     "cypress": "^9.1.1",
     "jest": "^27.4.2",
     "markdown-toc": "^1.2.0",
